@@ -4,6 +4,10 @@
 
 @import "_type";
 
+body {
+  margin-bottom: 4em;
+}
+
 .twitter:before {
   content: '@';
   font-size: 0.8em;
