@@ -17,7 +17,9 @@
     <article>
       <h1><a href='/'>DESCEND</a></h1>
 
+      <% unless current_article.nil? %>
       <h2><%= current_article.title %></h2>
+      <% end %>
 
       <%= yield %>
     </article>
