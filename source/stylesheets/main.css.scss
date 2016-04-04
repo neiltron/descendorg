@@ -1,0 +1,47 @@
+@import "bourbon";
+@import "base/base";
+@import "neat";
+
+@import "_type";
+
+.twitter:before {
+  content: '@';
+  font-size: 0.8em;
+  line-height: 1em;
+  vertical-align: baseline;
+  position: relative;
+  top: -1px;
+}
+
+ul {
+  padding-left: 0;
+  list-style: none;
+
+  li {
+    line-height: 1.8em;
+  }
+}
+
+#posts, #projects {
+  @include span-columns(12);
+
+  margin-top: 2em;
+
+  ol {
+    font-size: .95em;
+
+    li {
+      line-height: 1.8em;
+    }
+
+    a > span {
+      font-size: 1em;
+      text-transform: none;
+    }
+
+    span {
+      font-size: .8em;
+      text-transform: uppercase;
+    }
+  }
+}

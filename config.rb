@@ -10,6 +10,11 @@ page '/*.json', layout: false
 page '/*.txt', layout: false
 
 set :build_dir, 'tmp'
+set :markdown_engine, :redcarpet
+set :markdown, :fenced_code_blocks => true, :smartypants => true
+set :relative_links, true
+set :images_dir, 'images'
+activate :syntax
 
 # With alternative layout
 # page "/path/to/file.html", layout: :otherlayout
@@ -24,13 +29,13 @@ set :build_dir, 'tmp'
 
 activate :blog do |blog|
   # This will add a prefix to all links, template references and source paths
-  # blog.prefix = "blog"
+  blog.prefix = "posts"
 
   # blog.permalink = "{year}/{month}/{day}/{title}.html"
   # Matcher for blog source files
   # blog.sources = "{year}-{month}-{day}-{title}.html"
   # blog.taglink = "tags/{tag}.html"
-  # blog.layout = "layout"
+  blog.layout = "blog_layout"
   # blog.summary_separator = /(READMORE)/
   # blog.summary_length = 250
   # blog.year_link = "{year}.html"

@@ -13,11 +13,16 @@ gem 'tzinfo-data', platforms: [:mswin, :mingw, :jruby]
 # Middleman Gems
 gem "middleman", "~> 4.0.0"
 gem "middleman-blog"
+gem "middleman-syntax"
 
 gem 'redcarpet', '~> 3.3', '>= 3.3.3'
 
 # For feed.xml.builder
 gem "builder", "~> 3.0"
+
+gem 'bitters'
+gem 'bourbon'
+gem 'neat'
 
 
 group :development do
