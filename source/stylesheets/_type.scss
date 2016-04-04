@@ -14,9 +14,11 @@ article {
     margin: 0;
   }
 
-  h2 {
-    margin-bottom: .6em;
-    font-size: 1.6em;
+  &.blog {
+    h2 {
+      margin-bottom: .6em;
+      font-size: 1.6em;
+    }
   }
 
 
