@@ -13,6 +13,7 @@ set :markdown_engine, :redcarpet
 set :markdown, :fenced_code_blocks => true, :smartypants => true
 set :relative_links, true
 set :images_dir, 'images'
+
 activate :syntax
 
 # With alternative layout
@@ -66,9 +67,8 @@ page "/feed.xml", layout: false
 
 # Build-specific configuration
 configure :build do
-  # Minify CSS on build
-  # activate :minify_css
-
-  # Minify Javascript on build
-  # activate :minify_javascript
+  activate :relative_assets
+  activate :minify_css
+  activate :minify_javascript
+  activate :asset_hash
 end
