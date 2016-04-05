@@ -4,17 +4,13 @@ date: 2016-04-04
 tags: scraping, prototyping
 ---
 
-Setting the line-in-the-sand of a minimum viable product can be an art. Sometimes when you're concepting and collaborating with others, you need more than a sloppily drawn sharpie wireframe to tell the story of what you want to build. And sometimes when you're building something just for your own use, that minimum product is all you'll ever need.
+Setting the line-in-the-sand of a minimum viable product can be an art. If you're building apps that require external data, there's almost no end to the amount of technical foundation you *could* lay before you even start building an interface. API clients, crawlers, scrapers, databases, queues, caches, even more queues with fail modes and staggered retries...
 
-If you're building apps that require external data, there's almost no end to the amount of technical foundation you *could* lay before you even start building an interface. API clients, crawlers, scrapers, databases, queues, caches, even more queues with fail modes and staggered retries...
-
-Server-side frameworks for XML parsing and DOM traversal are plentiful. There's Mechanize (for both <a href='http://search.cpan.org/dist/WWW-Mechanize/' target='_blank'>Perl</a> and <a href='https://github.com/sparklemotion/mechanize' target='_blank'>Ruby</a>), <a href='https://github.com/hickford/MechanicalSoup' target='_blank'>MechanicalSoup</a>, <a href='https://github.com/sparklemotion/nokogiri' target='_blank'>Nokogiri</a>, etc. In the most basic version of a crawling system, you can drop any of these libraries into a script, attach it to a cron job, and call it a day.
-
-In an app that's expected to scale or perform any long-term analysis on stored data, your data harvesting needs to be reliable, idempotent, and repeatable. But for building an MVP, all of this can be overkill. Sometimes, all you need is jQuery.
+In an app that's expected to scale or perform any long-term analysis on stored data, your data harvesting needs to be reliable, idempotent, and repeatable. But for building an MVP, all of this can be overkill. Sometimes all you need is some basic jQuery.
 
 ### Move quick and leverage the hard work of others
 
-In this example, I'm pull data from a site that lists upcoming soccer matches. The data is listed in tables sorted by time. We want to grab things like team names, their logos, match times, and URLs so we can link back to the original page.
+In this example, I'm pulling data from a site that lists upcoming soccer matches. The data is listed in tables sorted by time. We want to grab things like team names, their logos, match times, and URLs so we can link back to the original page.
 
 To start we want to create a `Match` object. This will hold individual match data and necessary functions for fetching and displaying information.
 
@@ -22,14 +18,15 @@ To start we want to create a `Match` object. This will hold individual match dat
 var Match = function (opts) {
   // setup initial properties
   this.url = opts.url || '';
-    this.homeName = '';
-    this.awayName = '';
-    this.matchTime = Date.now();
+  this.homeName = '';
+  this.awayName = '';
+  this.matchTime = Date.now();
 
   // kick off any functions you want called on object creation
   this.initialize();
 };
 ```
+
 
 In this case, our initialize function is simple. Go fetch extra information and then render it as a row in a table.
 
@@ -54,9 +51,11 @@ Match.prototype.fetch = function () {
     success: function (data) {
       that.html = data;
 
-      // process the html
-            this.homeImage = $(this.html).find('.homeLogo img').attr('src');
-            this.awayImage = $(this.html).find('.awayLogo img').attr('src');
+      // parse the info you are looking for. we'll grab team logos here
+      this.homeImage = $(this.html).find('.homeLogo img').attr('src');
+      this.awayImage = $(this.html).find('.awayLogo img').attr('src');
+
+      // ... and on, and on for other data you need
     };
   });
 };
@@ -69,11 +68,11 @@ Instead of creating a whole separate view layer to handle display logic, we can 
 Match.prototype.render = function () {
   // initialize the container object if it's the first render
   if (typeof this.el === 'undefined') {
-        this.el = $('<tr></tr>').appendTo('#matches tbody');
-    }
+    this.el = $('<tr></tr>').appendTo('#matches tbody');
+  }
 
   // display whatever relevant match information
-    this.el.html('<td>' + this.homeTeam + '</td><td>' + this.awayTeam + '</td>');
+  this.el.html('<td>' + this.homeTeam + '</td><td>' + this.awayTeam + '</td>');
 };
 ```
 
@@ -81,17 +80,17 @@ Now we just need to scrape the initial page, create new match objects, and rende
 
 ```javascript
 var parseMatchLinks = function (html) {
-    // loop through each match row
-      $(html).find('.match').each(function (i, el) {
-        // parse relevant match information
-                this.homeTeam = $(el).find('.homeName').text().trim();
-                this.awayTeam = $(el).find('.awayName').text().trim();
-                this.matchDateTime = $(this.html).find('.matchTime').text().trim();
+  // loop through each match row
+  $(html).find('.match').each(function (i, el) {
+    // parse relevant match information
+    this.homeTeam = $(el).find('.homeName').text().trim();
+    this.awayTeam = $(el).find('.awayName').text().trim();
+    this.matchDateTime = $(this.html).find('.matchTime').text().trim();
 
-        // create our match object. from our code above, the Match object will parse it's sub-page and display itself when it's ready
-        var match = new Match({ url: url, title: title, otherData: otherData });
-      });
-    };
+    // create our match object. from our code above, the Match object will parse it's sub-page and display itself when it's ready
+    var match = new Match({ url: url, title: title, otherData: otherData });
+  });
+};
 
 $(document).ready(function () {
   // fetch then parse
@@ -132,18 +131,17 @@ app.use('/', function(req, res) {
   // the other site. i.e., if our client hits this
   // proxy server at http://localhost:4000/matches/match_id,
   // it will return html from http://targeturl.com/matches/match_id
-    var url = apiServerHost + req.url;
+  var url = apiServerHost + req.url;
 
-    // check the cache for the content
-    cache.get(url, function (error, content) {
+  // check the cache for the content
+  cache.get(url, function (error, content) {
+    if (error) { throw error; }
+    else if (typeof content === 'undefined') {
+      // if the content isn't in the cache, request it from the target site.
+      content = [];
 
-      if (error) { throw error; }
-      else if (typeof content === 'undefined') {
-    // if the content isn't in the cache, request it from the target site.
-            content = [];
-
-            request(url, function (error, response, body) {
-              content = { html: body };
+      request(url, function (error, response, body) {
+        content = { html: body };
 
         // add the content to the cache using the url as
         // the cache key and an expiration of 5 minutes.
