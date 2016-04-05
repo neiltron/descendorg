@@ -2,29 +2,29 @@
 pageable: true
 per_page: 10
 ---
+
 <p>Freelance, full-stack developer building apps and products for startups and agencies. Based in Virginia. <a href='mailto:neil@descend.org'><span>Get in touch</span></a>.</p>
 
-<ul>
-  <li>Github: <a target='_blank' href='http://github.com/neiltron'><span>neiltron</span></a></li>
-  <!-- <li>Blog: <a href='http://sofarswell.com' target='_blank'><span>SOFARSWELL</span></a></li> -->
-  <li>Twitter: <a target='_blank' class='twitter' href='http://twitter.com/realtron'><span>realtron</span></a></li>
-  <li>Resume: <a target='_blank' href='https://www.linkedin.com/pub/neil-pullman/26/a0a/9b3'><span>Linkedin</span></a></li>
-</ul>
+        <ul>
+          <li>Github: <a target='_blank' href='http://github.com/neiltron'><span>neiltron</span></a></li>
+          <li>Twitter: <a target='_blank' class='twitter' href='http://twitter.com/realtron'><span>realtron</span></a></li>
+          <li>Resume: <a target='_blank' href='https://www.linkedin.com/pub/neil-pullman/26/a0a/9b3'><span>Linkedin</span></a></li>
+        </ul>
 
-<div id='posts'>
-  <h2>Recent Articles</h2>
-  <ol>
-    <% blog.articles[0...5].each do |article| %>
-      <li><a href='<%= article.url %>'><span><%= article.title %></span></a> <span> – <%= article.date.strftime('%b %Y') %></span></li>
-    <% end %>
-  </ol>
-</div>
+        <div id='posts'>
+          <h2>Recent Articles</h2>
+          <ol>
+            <% blog.articles[0...5].each do |article| %>
+              <li><a href='<%= article.url %>'><span><%= article.title %></span></a> <span> – <%= article.date.strftime('%b %Y') %></span></li>
+            <% end %>
+          </ol>
+        </div>
 
-<div id='projects'>
-  <h2>Featured Work</h2>
-  <ol>
-    <li><a href='http://greatoakscharter.org' target='_blank'><span>Great Oaks Charter School</span></a> <span> – JUN 2015</span></li>
-    <li><a href='http://standardhotels.com' target='_blank'><span>Standard Hotels</span></a> <span> – JAN 2016</span></li>
-    <li><a href='http://mamouns.com' target='_blank'><span>Mamoun's Falafel</span></a> <span> – MAR 2016</span></li>
-  </ol>
-</div>
+        <div id='projects'>
+          <h2>Featured Work</h2>
+          <ol>
+            <li><a href='http://greatoakscharter.org' target='_blank'><span>Great Oaks Charter School</span></a> <span> – JUN 2015</span></li>
+            <li><a href='http://standardhotels.com' target='_blank'><span>Standard Hotels</span></a> <span> – JAN 2016</span></li>
+            <li><a href='http://mamouns.com' target='_blank'><span>Mamoun's Falafel</span></a> <span> – MAR 2016</span></li>
+          </ol>
+        </div>
