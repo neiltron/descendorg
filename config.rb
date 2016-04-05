@@ -15,6 +15,7 @@ set :relative_links, true
 set :images_dir, 'images'
 
 activate :syntax
+activate :minify_html
 
 # With alternative layout
 # page "/path/to/file.html", layout: :otherlayout
