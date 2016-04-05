@@ -67,6 +67,9 @@ page "/feed.xml", layout: false
 
 # Build-specific configuration
 configure :build do
+  set :url_root, 'http://descend.org'
+
+  activate :search_engine_sitemap
   activate :relative_assets
   activate :minify_css
   activate :minify_javascript

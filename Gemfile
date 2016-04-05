@@ -15,6 +15,7 @@ gem "middleman", "~> 4.0.0"
 gem "middleman-blog"
 gem "middleman-syntax"
 gem "middleman-minify-html"
+gem "middleman-search_engine_sitemap"
 gem "mgd"
 
 gem 'redcarpet', '~> 3.3', '>= 3.3.3'
