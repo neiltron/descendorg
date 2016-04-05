@@ -15,7 +15,6 @@ set :relative_links, true
 set :images_dir, 'images'
 
 activate :syntax
-activate :minify_html
 
 # With alternative layout
 # page "/path/to/file.html", layout: :otherlayout
@@ -71,5 +70,7 @@ configure :build do
   activate :relative_assets
   activate :minify_css
   activate :minify_javascript
+  activate :minify_html
   activate :asset_hash
 end
+
