@@ -1,7 +1,7 @@
 ---
 title: HTML5 Video Events with Popcorn.js
-date: 2016-04-18
-tags: video, prototyping
+date: 2016-05-02
+tags: video, prototyping, popcornjs
 ---
 
 I recently worked on an early stage project that needed to be able to show a video with configurable screens that appeared at specific times. The team wanted a working demo to inform the design process and I had been looking for an excuse to play with <a href='http://popcornjs.org/' target='_blank'>Popcorn.js</a> some more.
@@ -9,8 +9,8 @@ I recently worked on an early stage project that needed to be able to show a vid
 After some discussion, I put together a small app that showed questions over a video in a quiz format. If you want to skip ahead, you can <a href='http://neiltron.github.io/video_quiz_demo/public/' target='_blank'>view the demo</a> or <a href='http://github.com/neiltron/video-quiz' target='_blank'>check out the code</a>.
 
 
-### MVC-SORTA. MVC-ORTA. Whatever.
-There's a clever way to say Model-View-Controller-esque but I'm not sure what it is. Anyways, I used a MVC-ish pattern that was heavy on the View. The view also <a href='https://github.com/neiltron/video_quiz_demo/blob/gh-pages/public/js/question-view.js#L6' target='_blank'>holds model data</a>, which is supplied as an array of <a href='https://github.com/neiltron/video_quiz_demo/blob/gh-pages/public/js/questions.js' target='_blank'>pre-loaded question data</a>. In real life, this data would be handled by a CMS and probably served to the client via an API.
+### MV-SORTA
+I used a MVC-ish pattern that was heavy on the View. The view also <a href='https://github.com/neiltron/video_quiz_demo/blob/gh-pages/public/js/question-view.js#L6' target='_blank'>holds model data</a>, which is supplied as an array of <a href='https://github.com/neiltron/video_quiz_demo/blob/gh-pages/public/js/questions.js' target='_blank'>pre-loaded question data</a>. In real life, this data would be handled by a CMS and probably served to the client via an API.
 
 To get started, the events/views are initialized at page load and registered with Popcorn.js. This just tells the video what it's supposed to do and when. This is the kick-off point of the app.
 
@@ -70,12 +70,10 @@ Each view has a `render` method that gets called when the video gets to that vie
   }
 ```
 
-![RIP Sir David Attenborough](posts/2016/04/18/html5-video-events-with-popcornjs/quiz.gif)
+![RIP Sir David Attenborough](posts/2016/05/02/html5-video-events-with-popcornjs/quiz.gif)
 
 ### Making it real and taking it further
-That's really the bulk of this little app. If it were going into production, it would benefit from an actual framework and maybe a compilation step with Gulp or Grunt.
-
-It could be used with just this level of functionality if the end goal was more for entertainment or advertising purposes. It could be deployed as an app component, web banner, etc.
+That's really the bulk of this little app. It could be used with just this level of functionality if the end goal was more for entertainment or advertising purposes. It could be deployed as an app component, web banner, etc.
 
 If it was in an education or training product, it could send the answer data back to a server (in the `checkAnswer` method above) to be graded or analyzed. Or it could get rid of the modal screens altogether and just track how far into the video a user had watched.
 
