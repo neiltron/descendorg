@@ -5,100 +5,16 @@
   <id>http://blog.url.com/posts</id>
   <link href="http://blog.url.com/posts"/>
   <link href="http://blog.url.com/feed.xml" rel="self"/>
-  <updated>2016-04-17T20:00:00-04:00</updated>
+  <updated>2016-04-03T20:00:00-04:00</updated>
   <author>
     <name>Blog Author</name>
   </author>
-  <entry>
-    <title>HTML5 Video Events with Popcorn.js</title>
-    <link rel="alternate" href="http://blog.url.com/posts/2016/04/18/html5-video-events-with-popcornjs.html"/>
-    <id>http://blog.url.com/posts/2016/04/18/html5-video-events-with-popcornjs.html</id>
-    <published>2016-04-17T20:00:00-04:00</published>
-    <updated>2016-05-01T17:36:34-04:00</updated>
-    <author>
-      <name>Article Author</name>
-    </author>
-    <content type="html">&lt;p&gt;I recently worked on an early stage project that needed to be able to show a video with configurable screens that appeared at specific times. The team wanted a working demo to inform the design process and I had been looking for an excuse to play with &lt;a href='http://popcornjs.org/' target='_blank'&gt;Popcorn.js&lt;/a&gt; some more.&lt;/p&gt;
-
-&lt;p&gt;After some discussion, I put together a small app that showed questions over a video in a quiz format. If you want to skip ahead, you can &lt;a href='http://neiltron.github.io/video_quiz_demo/public/' target='_blank'&gt;view the demo&lt;/a&gt; or &lt;a href='http://github.com/neiltron/video-quiz' target='_blank'&gt;check out the code&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3&gt;MVC-SORTA. MVC-ORTA. Whatever.&lt;/h3&gt;
-
-&lt;p&gt;There&amp;rsquo;s a clever way to say Model-View-Controller-esque but I&amp;rsquo;m not sure what it is. Anyways, I used a MVC-ish pattern that was heavy on the View. The view also &lt;a href='https://github.com/neiltron/video_quiz_demo/blob/gh-pages/public/js/question-view.js#L6' target='_blank'&gt;holds model data&lt;/a&gt;, which is supplied as an array of &lt;a href='https://github.com/neiltron/video_quiz_demo/blob/gh-pages/public/js/questions.js' target='_blank'&gt;pre-loaded question data&lt;/a&gt;. In real life, this data would be handled by a CMS and probably served to the client via an API.&lt;/p&gt;
-
-&lt;p&gt;To get started, the events/views are initialized at page load and registered with Popcorn.js. This just tells the video what it&amp;rsquo;s supposed to do and when. This is the kick-off point of the app.&lt;/p&gt;
-
-&lt;p&gt;It should be noted that the two or three popcorn-specific lines below are &lt;strong&gt;all we really need to do to get Popcorn.js working&lt;/strong&gt;. Part of what makes Popcorn so powerful as a tool is how simple it is to get started. It&amp;rsquo;s &lt;a href='http://popcornjs.org/popcorn-docs/' target='_blank'&gt;incredibly flexible&lt;/a&gt;, but the most basic uses can be handled in just a few lines.&lt;/p&gt;
-&lt;pre class="highlight javascript"&gt;&lt;code&gt;&lt;span class="nx"&gt;$&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;document&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;ready&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-  &lt;span class="c1"&gt;// create a youtube video object&lt;/span&gt;
-  &lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;youtube&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nx"&gt;Popcorn&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;HTMLYouTubeVideoElement&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'#video'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-  &lt;span class="nx"&gt;youtube&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;src&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;videoUrl&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-
-  &lt;span class="c1"&gt;// create popcorn player from youtube object&lt;/span&gt;
-  &lt;span class="nx"&gt;video&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nx"&gt;Popcorn&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;youtube&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-
-  &lt;span class="c1"&gt;// create questions via callback&lt;/span&gt;
-  &lt;span class="c1"&gt;// and append to popcorn timeline&lt;/span&gt;
-  &lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;questionsLength&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;questions&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;length&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-  &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="nx"&gt;i&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="nx"&gt;questionsLength&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="nx"&gt;i&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="nx"&gt;video&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;cue&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt; &lt;span class="nx"&gt;questions&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;i&lt;/span&gt;&lt;span class="p"&gt;].&lt;/span&gt;&lt;span class="nx"&gt;time&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;returnCallback&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;questions&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;i&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt; &lt;span class="p"&gt;);&lt;/span&gt;
-  &lt;span class="p"&gt;}&lt;/span&gt;
-
-  &lt;span class="c1"&gt;// start the video automatically&lt;/span&gt;
-  &lt;span class="nx"&gt;video&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;play&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
-&lt;span class="p"&gt;});&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Each view has a &lt;code&gt;render&lt;/code&gt; method that gets called when the video gets to that view&amp;rsquo;s specified time. This is handled by the &lt;code&gt;returnCallback&lt;/code&gt; method in the example above. In the case of this demo, we want the video to pause and display a question/answer screen. Then, after the users chooses an answer, the view should disappear and the video should resume playing.&lt;/p&gt;
-&lt;pre class="highlight javascript"&gt;&lt;code&gt;  &lt;span class="nx"&gt;render&lt;/span&gt;&lt;span class="err"&gt;:&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="nb"&gt;window&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;video&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;pause&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
-
-    &lt;span class="nx"&gt;$&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;el&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-      &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;html&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;tmpl&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;questionData&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-      &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;addClass&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'active'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-
-    &lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;bindEvents&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
-  &lt;span class="p"&gt;},&lt;/span&gt;
-
-  &lt;span class="nx"&gt;bindEvents&lt;/span&gt;&lt;span class="err"&gt;:&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;that&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-
-    &lt;span class="c1"&gt;// handles the user click&lt;/span&gt;
-    &lt;span class="nx"&gt;$&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;el&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;find&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'li'&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;one&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'click'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;e&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-      &lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;correctEl&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;$&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;that&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;el&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;find&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'li'&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;eq&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;that&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;questionData&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;answer&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-
-      &lt;span class="nx"&gt;that&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;checkAnswer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;$&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;e&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;target&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="nx"&gt;correctEl&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-
-      &lt;span class="nx"&gt;setTimeout&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;that&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;close&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;3000&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-    &lt;span class="p"&gt;});&lt;/span&gt;
-  &lt;span class="p"&gt;},&lt;/span&gt;
-
-  &lt;span class="nx"&gt;close&lt;/span&gt;&lt;span class="err"&gt;:&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="nx"&gt;$&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'#quiz_container'&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;removeClass&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'active'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-
-    &lt;span class="nb"&gt;window&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;video&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;play&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
-  &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;img alt="RIP Sir David Attenborough" src="/images/posts/2016/04/18/html5-video-events-with-popcornjs/quiz.gif" /&gt;&lt;/p&gt;
-
-&lt;h3&gt;Making it real and taking it further&lt;/h3&gt;
-
-&lt;p&gt;That&amp;rsquo;s really the bulk of this little app. If it were going into production, it would benefit from an actual framework and maybe a compilation step with Gulp or Grunt.&lt;/p&gt;
-
-&lt;p&gt;It could be used with just this level of functionality if the end goal was more for entertainment or advertising purposes. It could be deployed as an app component, web banner, etc.&lt;/p&gt;
-
-&lt;p&gt;If it was in an education or training product, it could send the answer data back to a server (in the &lt;code&gt;checkAnswer&lt;/code&gt; method above) to be graded or analyzed. Or it could get rid of the modal screens altogether and just track how far into the video a user had watched.&lt;/p&gt;
-
-&lt;p&gt;This could also be re-purposed as an interactive site. The question views could, instead of stoping/restarting the video, just display images/effects over top of the video or modify other DOM elements at choreographed times.&lt;/p&gt;
-</content>
-  </entry>
   <entry>
     <title>Quick Prototypes with client-side web scraping</title>
     <link rel="alternate" href="http://blog.url.com/posts/2016/04/04/quick-prototypes-with-client-side-web-scraping.html"/>
     <id>http://blog.url.com/posts/2016/04/04/quick-prototypes-with-client-side-web-scraping.html</id>
     <published>2016-04-03T20:00:00-04:00</published>
-    <updated>2016-05-01T17:36:34-04:00</updated>
+    <updated>2016-05-01T17:39:52-04:00</updated>
     <author>
       <name>Article Author</name>
     </author>
