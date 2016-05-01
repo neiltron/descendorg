@@ -1,0 +1,54 @@
+<!doctype html> <html> <head> <meta charset=utf-8 /> <meta http-equiv=X-UA-Compatible content='IE=edge;chrome=1'/> <meta name=viewport content="width=device-width, initial-scale=1"> <title>DESCEND - HTML5 Video Events with Popcorn.js</title> <link rel=alternate type="application/atom+xml" title="Atom Feed" href="/posts/feed.xml"/> <link href="../../../../stylesheets/main-f00d81e5.css" rel=stylesheet /> <link href="../../../../stylesheets/syntax-79b5cf2b.css" rel=stylesheet /> <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400' rel=stylesheet> </head> <body> <article class=blog> <h1><a href='/'>DESCEND</a></h1> <h2>HTML5 Video Events with Popcorn.js</h2> <p>I recently worked on an early stage project that needed to be able to show a video with configurable screens that appeared at specific times. The team wanted a working demo to inform the design process and I had been looking for an excuse to play with <a href='http://popcornjs.org/' target=_blank>Popcorn.js</a> some more.</p> <p>After some discussion, I put together a small app that showed questions over a video in a quiz format. If you want to skip ahead, you can <a href='http://neiltron.github.io/video_quiz_demo/public/' target=_blank>view the demo</a> or <a href='http://github.com/neiltron/video-quiz' target=_blank>check out the code</a>.</p> <h3>MVC-SORTA. MVC-ORTA. Whatever.</h3> <p>There&rsquo;s a clever way to say Model-View-Controller-esque but I&rsquo;m not sure what it is. Anyways, I used a MVC-ish pattern that was heavy on the View. The view also <a href='https://github.com/neiltron/video_quiz_demo/blob/gh-pages/public/js/question-view.js#L6' target=_blank>holds model data</a>, which is supplied as an array of <a href='https://github.com/neiltron/video_quiz_demo/blob/gh-pages/public/js/questions.js' target=_blank>pre-loaded question data</a>. In real life, this data would be handled by a CMS and probably served to the client via an API.</p> <p>To get started, the events/views are initialized at page load and registered with Popcorn.js. This just tells the video what it&rsquo;s supposed to do and when. This is the kick-off point of the app.</p> <p>It should be noted that the two or three popcorn-specific lines below are <strong>all we really need to do to get Popcorn.js working</strong>. Part of what makes Popcorn so powerful as a tool is how simple it is to get started. It&rsquo;s <a href='http://popcornjs.org/popcorn-docs/' target=_blank>incredibly flexible</a>, but the most basic uses can be handled in just a few lines.</p> <pre class="highlight javascript"><code><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// create a youtube video object</span>
+  <span class="kd">var</span> <span class="nx">youtube</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Popcorn</span><span class="p">.</span><span class="nx">HTMLYouTubeVideoElement</span><span class="p">(</span><span class="s1">'#video'</span><span class="p">);</span>
+  <span class="nx">youtube</span><span class="p">.</span><span class="nx">src</span> <span class="o">=</span> <span class="nx">videoUrl</span><span class="p">;</span>
+
+  <span class="c1">// create popcorn player from youtube object</span>
+  <span class="nx">video</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Popcorn</span><span class="p">(</span><span class="nx">youtube</span><span class="p">);</span>
+
+  <span class="c1">// create questions via callback</span>
+  <span class="c1">// and append to popcorn timeline</span>
+  <span class="kd">var</span> <span class="nx">questionsLength</span> <span class="o">=</span> <span class="nx">questions</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">questionsLength</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">video</span><span class="p">.</span><span class="nx">cue</span><span class="p">(</span> <span class="nx">questions</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">time</span><span class="p">,</span> <span class="nx">returnCallback</span><span class="p">(</span><span class="nx">questions</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span> <span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="c1">// start the video automatically</span>
+  <span class="nx">video</span><span class="p">.</span><span class="nx">play</span><span class="p">();</span>
+<span class="p">});</span>
+</code></pre> <p>Each view has a <code>render</code> method that gets called when the video gets to that view&rsquo;s specified time. This is handled by the <code>returnCallback</code> method in the example above. In the case of this demo, we want the video to pause and display a question/answer screen. Then, after the users chooses an answer, the view should disappear and the video should resume playing.</p> <pre class="highlight javascript"><code>  <span class="nx">render</span><span class="err">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="nb">window</span><span class="p">.</span><span class="nx">video</span><span class="p">.</span><span class="nx">pause</span><span class="p">();</span>
+
+    <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">el</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">html</span><span class="p">(</span><span class="nx">tmpl</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">questionData</span><span class="p">))</span>
+      <span class="p">.</span><span class="nx">addClass</span><span class="p">(</span><span class="s1">'active'</span><span class="p">);</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">bindEvents</span><span class="p">();</span>
+  <span class="p">},</span>
+
+  <span class="nx">bindEvents</span><span class="err">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">that</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+
+    <span class="c1">// handles the user click</span>
+    <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">el</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="s1">'li'</span><span class="p">).</span><span class="nx">one</span><span class="p">(</span><span class="s1">'click'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">correctEl</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="nx">that</span><span class="p">.</span><span class="nx">el</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="s1">'li'</span><span class="p">).</span><span class="nx">eq</span><span class="p">(</span><span class="nx">that</span><span class="p">.</span><span class="nx">questionData</span><span class="p">.</span><span class="nx">answer</span><span class="p">);</span>
+
+      <span class="nx">that</span><span class="p">.</span><span class="nx">checkAnswer</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">target</span><span class="p">),</span> <span class="nx">correctEl</span><span class="p">);</span>
+
+      <span class="nx">setTimeout</span><span class="p">(</span><span class="nx">that</span><span class="p">.</span><span class="nx">close</span><span class="p">,</span> <span class="mi">3000</span><span class="p">);</span>
+    <span class="p">});</span>
+  <span class="p">},</span>
+
+  <span class="nx">close</span><span class="err">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="nx">$</span><span class="p">(</span><span class="s1">'#quiz_container'</span><span class="p">).</span><span class="nx">removeClass</span><span class="p">(</span><span class="s1">'active'</span><span class="p">);</span>
+
+    <span class="nb">window</span><span class="p">.</span><span class="nx">video</span><span class="p">.</span><span class="nx">play</span><span class="p">();</span>
+  <span class="p">}</span>
+</code></pre> <p><img alt="RIP Sir David Attenborough" src="../../../../images/posts/2016/04/18/html5-video-events-with-popcornjs/quiz.gif"/></p> <h3>Making it real and taking it further</h3> <p>That&rsquo;s really the bulk of this little app. If it were going into production, it would benefit from an actual framework and maybe a compilation step with Gulp or Grunt.</p> <p>It could be used with just this level of functionality if the end goal was more for entertainment or advertising purposes. It could be deployed as an app component, web banner, etc.</p> <p>If it was in an education or training product, it could send the answer data back to a server (in the <code>checkAnswer</code> method above) to be graded or analyzed. Or it could get rid of the modal screens altogether and just track how far into the video a user had watched.</p> <p>This could also be re-purposed as an interactive site. The question views could, instead of stoping/restarting the video, just display images/effects over top of the video or modify other DOM elements at choreographed times.</p> </article> <script>
+      (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+      function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+      e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+      e.src='//www.google-analytics.com/analytics.js';
+      r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+      ga('create','UA-58971628-1');ga('send','pageview');
+    </script> </body> </html>
