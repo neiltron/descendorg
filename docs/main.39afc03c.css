@@ -1,0 +1,47 @@
+html, body {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  font-family: "roboto", helvetica, arial, sans-serif;
+}
+
+main {
+  padding: 40px;
+  font-size: 1.4em;
+}
+main a {
+  color: #0c0c0c;
+  text-decoration: none;
+  border-bottom: 2px solid #666;
+}
+main p {
+  margin-bottom: 32px;
+}
+main h1 {
+  margin: 0 0 16px;
+  font-size: 2.4em;
+}
+main h1 a {
+  border-bottom: none;
+  text-decoration: none;
+  font-weight: 700;
+  font-family: helvetica neue, arial, sans-serif;
+}
+main h4 {
+  margin: 0 0 8px;
+}
+main ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+main ul li {
+  margin-bottom: 8px;
+}
+main #social {
+  margin-top: 32px;
+}
+
+/*# sourceMappingURL=/main.39afc03c.css.map */
